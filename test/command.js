@@ -110,6 +110,17 @@ describe('Command', () => {
       argv.file.should.equal('foo.js')
       argv.reporter.should.equal('html')
     })
+
+    it('parses positional arguments starting with a hyphen as positional arguments', (done) => {
+      const argv = yargs("run foo bar '-Baz quux'")
+        .command({ command: 'run <foo> <bar> [args]', builder: ysub => ysub.strict().demandCommand(0, 0).options({}) })
+        .strict()
+        .demandCommand()
+        .fail((err) => done(new Error(err)))
+        .argv
+      argv.should.have.property('args').and.equal('-Baz quux')
+      return done()
+    })
   })
 
   describe('variadic', () => {
